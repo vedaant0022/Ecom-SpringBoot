@@ -1,8 +1,6 @@
 package com.vedaant.ecom.controller;
-
 import java.io.IOException;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -107,6 +105,20 @@ public ResponseEntity<?> getProductImage(@PathVariable int productId) {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/products/search")
+    public ResponseEntity<?> searchProduct(@RequestParam String keyword) {
+
+        List<Product> result = service.searchProduct(keyword);
+
+        if (result.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("No products found");
+        }
+
+        return ResponseEntity.ok(result);
     }
 
 
