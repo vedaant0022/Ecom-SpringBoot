@@ -1,0 +1,58 @@
+package com.vedaant.ecom.controller;
+
+import com.vedaant.ecom.model.User;
+import com.vedaant.ecom.service.ProductService;
+import com.vedaant.ecom.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@CrossOrigin
+@RequestMapping("/api/auth")
+public class UserController {
+    @Autowired
+    UserService service;
+
+    @PostMapping("/user")
+    public ResponseEntity<?> addUser(@RequestBody User user){
+
+        if(user.getEmail() == null || user.getPassword() == null){
+            return new ResponseEntity<>("Enter All Fields",HttpStatus.NOT_FOUND);
+        }
+        User check = service.checkUser(user.getEmail());
+        if(check != null){
+            return new ResponseEntity<>("User exists", HttpStatus.NOT_FOUND);
+        }
+        try{
+            User u1 = service.addUser(user);
+            return new ResponseEntity<>(u1,HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/user/login")
+    public ResponseEntity<?> loginUser(@RequestParam String email,@RequestParam String password){
+        User user = service.checkUser(email);
+        if(user == null){
+            return new ResponseEntity<>("User does not exists", HttpStatus.NOT_FOUND);
+        }
+        try {
+            if(!user.getPassword().equals(password)){
+                return new ResponseEntity<>("Invalid Credentials",HttpStatus.UNAUTHORIZED);
+            }else {
+                return new ResponseEntity<>(user+"Login Success",HttpStatus.FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
+
+
+}
