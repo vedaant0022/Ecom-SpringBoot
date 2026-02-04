@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/api/auth")
@@ -34,21 +37,29 @@ public class UserController {
         }
     }
 
+
     @PostMapping("/user/login")
-    public ResponseEntity<?> loginUser(@RequestParam String email,@RequestParam String password){
+    public ResponseEntity<?> loginUser(@RequestParam String email,@RequestParam String password) {
+
         User user = service.checkUser(email);
-        if(user == null){
-            return new ResponseEntity<>("User does not exists", HttpStatus.NOT_FOUND);
+
+        if (user == null) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("User does not exist");
         }
-        try {
-            if(!user.getPassword().equals(password)){
-                return new ResponseEntity<>("Invalid Credentials",HttpStatus.UNAUTHORIZED);
-            }else {
-                return new ResponseEntity<>(user+"Login Success",HttpStatus.FOUND);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+
+        if (!user.getPassword().equals(password)) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid credentials");
         }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Login Success");
+        response.put("user", user);
+
+        return ResponseEntity.ok(response);
     }
 
 
