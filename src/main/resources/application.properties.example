@@ -6,12 +6,20 @@ spring.datasource.driver-class-name=
 spring.datasource.username=
 spring.datasource.password=
 
+spring.datasource.url=jdbc:postgresql://localhost:5432/<Name>
+spring.datasource.username=
+spring.datasource.password=
+spring.datasource.driver-class-name=org.postgresql.Driver
 
 spring.h2.console.enabled=true
 spring.h2.console.path=/h2-console
 
-
+##When using H2 Database use below
 spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+
+##When using Postgres use below
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 
