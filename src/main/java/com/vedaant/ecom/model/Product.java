@@ -6,14 +6,9 @@ import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Generated;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import tools.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
@@ -31,18 +26,10 @@ public class Product {
 		return "Product{" +
 				"id=" + id +
 				", name='" + name + '\'' +
-				", desc='" + desc + '\'' +
-				", brand='" + brand + '\'' +
 				", price=" + price +
-				", category='" + category + '\'' +
-				", releaseDate=" + releaseDate +
-				", available=" + available +
-				", quantity=" + quantity +
-				", imageType='" + imageType + '\'' +
-				", imageDate=" + Arrays.toString(imageDate) +
-				", imageName='" + imageName + '\'' +
 				'}';
 	}
+
 
 	private String name;
 	@Column(name = "description")
