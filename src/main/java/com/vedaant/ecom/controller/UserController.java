@@ -1,12 +1,12 @@
 package com.vedaant.ecom.controller;
 
 import com.vedaant.ecom.model.User;
-import com.vedaant.ecom.service.ProductService;
 import com.vedaant.ecom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -37,6 +37,7 @@ public class UserController {
         }
     }
 
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @PostMapping("/user/login")
     public ResponseEntity<?> loginUser(@RequestParam String email,@RequestParam String password) {
@@ -48,11 +49,10 @@ public class UserController {
                     .status(HttpStatus.UNAUTHORIZED)
                     .body("User does not exist");
         }
-
-        if (!user.getPassword().equals(password)) {
+        if (!encoder.matches(password, user.getPassword())) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
-                    .body("Invalid credentials");
+                    .body("Invalid Credentials");
         }
 
         Map<String, Object> response = new HashMap<>();
