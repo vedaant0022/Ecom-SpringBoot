@@ -1,6 +1,7 @@
 package com.vedaant.ecom.controller;
 
 import com.vedaant.ecom.model.User;
+import com.vedaant.ecom.service.JWTService;
 import com.vedaant.ecom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,8 @@ import java.util.Map;
 public class UserController {
     @Autowired
     UserService service;
+    @Autowired
+    private JWTService jWTService;
 
     @PostMapping("/user")
     public ResponseEntity<?> addUser(@RequestBody User user){
@@ -56,8 +59,10 @@ public class UserController {
         }
 
         Map<String, Object> response = new HashMap<>();
+        String token = jWTService.generateToken(email);
         response.put("message", "Login Success");
         response.put("user", user);
+        response.put("token", token);
 
         return ResponseEntity.ok(response);
     }
